@@ -1,4 +1,3 @@
-import { log } from 'console';
 import {promises as fs} from 'fs';
 class Product{
     constructor(title,description,price,thumbnail,code,stock){
@@ -53,6 +52,22 @@ class ProductManager{
         }else{
             return 'Not Found';
         }
+    }
+    async updateProduct(id, product) {
+        const products = JSON.parse(await fs.readFile(path, 'utf-8'))
+        const index = products.findIndex(prod => prod.id === id)
+        if (index != -1) {
+            products[index].title = product.title;
+            products[index].description = product.description;
+            products[index].price = product.price;
+            products[index].thumbnail = product.thumbnail;
+            products[index].code = product.code;
+            products[index].stock = product.stock;
+            await fs.writeFile(this.path, JSON.stringify(products));
+        } else {
+            console.log("Producto no encontrado")
+        }
+    
     }
 }
 
