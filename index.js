@@ -1,3 +1,5 @@
+import { log } from 'console';
+import {promises as fs} from 'fs';
 class Product{
     constructor(title,description,price,thumbnail,code,stock){
         this.title = title;
@@ -18,14 +20,19 @@ class Product{
     }
 }
 class ProductManager{
-    constructor(){
+    constructor(path){
         this.products = [];
+        this.path = path;
     }
-    addProduct(product){
-        if(!this.products.some((productBD)=> productBD.code == product.code)){
+    async addProduct(product){
+        const products = JSON.parse(await fs.readFile(this.path,'utf-8'));
+        
+        if(!products.some((productBD)=> productBD.code == product.code)){
             if(!Object.values(product).some((prop)=>prop == undefined)){
-                this.products.push(product);
+                products.push(product);
+                await fs.writeFile(this.path,JSON.stringify(products));
                 console.log('El producto fue agregado exitosamente');
+                console.log(products);
             }
             else{
                 console.log('Producto con propiedad faltante');
@@ -33,8 +40,6 @@ class ProductManager{
         }else{
             console.log('Producto con codigo repetido')
         }
-        
-
     }
     getProducts(){
        return this.products;
@@ -49,7 +54,7 @@ class ProductManager{
     }
 }
 
-let productManager = new ProductManager();
+let productManager = new ProductManager('./products.json');
 console.log('Productos: ',productManager.getProducts());
 productManager.addProduct(new Product("Producto Prueba","Este es un producto prueba",200,"sin imagen","abc123",25));
 console.log('Productos: ',productManager.getProducts());
