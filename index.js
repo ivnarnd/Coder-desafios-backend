@@ -6,18 +6,26 @@ class Product{
         this.thumbnail = thumbnail;
         this.code = code;
         this.stock = stock;
+        this.id = Product.incrementId();
+    }
+    static incrementId(){
+        if(this.idIncrement){
+            this.idIncrement++;
+        }else{
+            this.idIncrement=1;
+        }
+        return this.idIncrement;
     }
 }
 class ProductManager{
     constructor(){
         this.products = [];
-        this.id = 0;
     }
     addProduct(product){
         if(!this.products.some((productBD)=> productBD.code == product.code)){
             if(!Object.values(product).some((prop)=>prop == undefined)){
-                product.id = this.id++;
                 this.products.push(product);
+                console.log('El producto fue agregado exitosamente');
             }
             else{
                 console.log('Producto con propiedad faltante');
