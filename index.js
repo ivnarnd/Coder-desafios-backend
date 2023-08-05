@@ -69,6 +69,17 @@ class ProductManager{
         }
     
     }
+    async deleteProduct(id){
+        const products = JSON.parse(await fs.readFile(this.path, 'utf-8'))
+        const product = products.find(prod => prod.id === id)
+    
+        if (product) {
+            await fs.writeFile(this.path, JSON.stringify(products.filter(prod => prod.id != id)));
+        } else {
+            console.log("Producto no encontrado");
+        }
+    
+    }
 }
 
 let productManager = new ProductManager('./products.json');
