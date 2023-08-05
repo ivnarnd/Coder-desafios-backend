@@ -32,7 +32,6 @@ class ProductManager{
                 products.push(product);
                 await fs.writeFile(this.path,JSON.stringify(products));
                 console.log('El producto fue agregado exitosamente');
-                console.log(products);
             }
             else{
                 console.log('Producto con propiedad faltante');
@@ -41,13 +40,16 @@ class ProductManager{
             console.log('Producto con codigo repetido')
         }
     }
-    getProducts(){
-       return this.products;
+
+    async getProducts(){
+       const products = JSON.parse(await fs.readFile(this.path,'utf-8'));
+       return products;
     }
-    getProductById(id){
-        let search = this.products.find((productBD)=>productBD.id == id);
-        if (search) {
-            return search;
+    async getProductById(id){
+        const products = JSON.parse(await fs.readFile(this.path,'utf-8'));
+        let result = products.find((productBD)=>productBD.id == id);
+        if (result) {
+            return result;
         }else{
             return 'Not Found';
         }
