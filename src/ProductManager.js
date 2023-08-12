@@ -5,7 +5,6 @@ export class ProductManager{
     }
     async addProduct(product){
         const products = JSON.parse(await fs.readFile(this.path,'utf-8'));
-        
         if(!products.some((productBD)=> productBD.code == product.code)){
             if(!Object.values(product).some((prop)=>prop == undefined)){
                 products.push(product);
@@ -30,7 +29,7 @@ export class ProductManager{
         if (result) {
             return result;
         }else{
-            return 'Not Found';
+            return false;
         }
     }
     async updateProduct(id, product) {
