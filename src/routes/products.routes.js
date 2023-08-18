@@ -1,5 +1,9 @@
 import { Router } from "express";
+import  {ProductManager} from "../ProductManager.js";
+
+let productManager = new ProductManager('./src/products.json');
 const prodsRouter = Router();
+
 prodsRouter.get('/',(req,res)=>{
     const{limit} = req.query;
     productManager.getProducts().then((data)=>{
