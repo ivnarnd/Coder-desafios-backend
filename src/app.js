@@ -2,6 +2,7 @@ import  Express from "express";
 import { ProductManager } from "./ProductManager.js";
 const PORT = 8080;
 let app = Express();
+app.use(Express.json());
 let productManager = new ProductManager('./src/products.json');
 
 app.get('/products',(req,res)=>{
