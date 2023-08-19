@@ -1,5 +1,5 @@
 export class Product{
-    constructor(title,description,price,thumbnail,code,stock){
+    constructor(title,description,price,thumbnail,code,stock,category){
         this.title = title;
         this.description = description;
         this.price = price;
@@ -7,6 +7,8 @@ export class Product{
         this.code = code;
         this.stock = stock;
         this.id = Product.incrementId();
+        this.category=category;
+        this.status=true;
     }
     static incrementId(){
         if(this.idIncrement){
