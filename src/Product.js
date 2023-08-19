@@ -1,4 +1,4 @@
-import {promises as fs} from 'fs';
+import fs from 'fs';
 export class Product{
     constructor(title,description,price,thumbnail,code,stock,category,status){
         this.title = title;
@@ -7,18 +7,16 @@ export class Product{
         this.thumbnail = thumbnail;
         this.code = code;
         this.stock = stock;
-        this.id = Product.incrementId();
+        this.id = this.getId();
         this.category=category;
         this.status=status;
     }
-    static async incrementId(){
-        const path = "./src/products.json"
-        const products = JSON.parse(await fs.readFile(path,'utf-8'));
-        if(products){
-            this.idIncrement = products[products.length-1].id + 1;
-        }else{
-            this.idIncrement = 1;
-        }
-        return this.idIncrement;
+    getId() {
+        const path = "./src/products.json";
+        const data = fs.readFileSync(path, 'utf-8');
+        const products = JSON.parse(data);
+        const lastProduct = products[products.length - 1];
+        const newId = (lastProduct ? lastProduct.id : 0) + 1;
+        return newId;
     }
 }
