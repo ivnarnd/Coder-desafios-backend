@@ -1,5 +1,6 @@
 import { Router } from "express";
 import  {ProductManager} from "../ProductManager.js";
+import { Product } from "../Product.js";
 
 let productManager = new ProductManager('./src/products.json');
 const prodsRouter = Router();
@@ -23,6 +24,25 @@ prodsRouter.get('/:pid',(req,res)=>{
             res.status(404).send('El producto no existe');
         }
     });
+});
+prodsRouter.post('/',(req,res)=>{
+    let product = {};
+    let {title,description,price,thumbnail,code,stock,category,status} = req.body;
+    if(title && description && price && code && stock && category){
+        productManager.getProductByCode(code).then((resp)=>{
+            if(resp){
+                res.status(400).send('Producto ya existente');
+            }else{
+                product = new Product(title,description,price,thumbnail,code,stock,category,status);
+                productManager.addProduct(product)
+                .then(resp => res.status(200).send(resp))
+                .catch(error => res.status(400).send(error));
+            }
+        });
+    }else{
+        res.status(404).send('Los campos son obligatorios');
+    }
+    
 });
 
 export default prodsRouter;

@@ -9,13 +9,13 @@ export class ProductManager{
             if(!Object.values(product).some((prop)=>prop == undefined)){
                 products.push(product);
                 await fs.writeFile(this.path,JSON.stringify(products));
-                console.log('El producto fue agregado exitosamente');
+                return(`El producto ${product.name} fue agregado exitosamente`);
             }
             else{
-                console.log('Producto con propiedad faltante');
+                return('Producto con propiedad faltante');
             }
         }else{
-            console.log('Producto con codigo repetido')
+            return('Producto con codigo repetido')
         }
     }
 
@@ -26,6 +26,15 @@ export class ProductManager{
     async getProductById(id){
         const products = JSON.parse(await fs.readFile(this.path,'utf-8'));
         let result = products.find((productBD)=>productBD.id == id);
+        if (result) {
+            return result;
+        }else{
+            return false;
+        }
+    }
+    async getProductByCode(code){
+        const products = JSON.parse(await fs.readFile(this.path,'utf-8'));
+        let result = products.find((productBD)=>productBD.code == code);
         if (result) {
             return result;
         }else{
