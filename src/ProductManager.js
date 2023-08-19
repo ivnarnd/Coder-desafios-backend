@@ -10,7 +10,7 @@ export class ProductManager{
             if(!Object.values(product).some((prop)=>prop == undefined)){
                 products.push(product);
                 await fs.writeFile(this.path,JSON.stringify(products));
-                return(`El producto ${product.name} fue agregado exitosamente`);
+                return(`El producto ${product.title} fue agregado exitosamente`);
             }
             else{
                 return('Producto con propiedad faltante');

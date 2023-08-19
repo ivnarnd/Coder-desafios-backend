@@ -44,5 +44,11 @@ prodsRouter.post('/',(req,res)=>{
     }
     
 });
+prodsRouter.put('/:pid',(req,res)=>{
+    console.log(req.params.pid);
+    productManager.updateProduct(parseInt(req.params.pid),req.body)
+    .then( msj => res.status(200).send(msj))
+    .catch(msj=>res.status(400).send(msj));
+});
 
 export default prodsRouter;
