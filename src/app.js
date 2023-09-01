@@ -10,6 +10,6 @@ app.use(Express.json());
 app.use(Express.urlencoded({extended:true}));
 
 app.use('/api/products',prodsRouter);
-app.use('/api/cards',cardsRouter);
+app.use('/api/carts',cardsRouter);
 
 app.listen(PORT,()=> console.log(`Servidor corriendo en localhost:${PORT}`));
