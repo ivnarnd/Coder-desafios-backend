@@ -38,7 +38,7 @@ export class CartManager{
     }
     async updateCart(id, cart) {
         const carts = JSON.parse(await fs.readFile(this.path, 'utf-8'))
-        const index = carts.findIndex(cart => cart.id === id);
+        const index = carts.findIndex(cartBD => cartBD.id == id);
         if (index != -1) {
             carts[index].products = cart.products;
             await fs.writeFile(this.path, JSON.stringify(carts));

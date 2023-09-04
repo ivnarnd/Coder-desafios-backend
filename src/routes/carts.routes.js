@@ -37,17 +37,18 @@ cartsRouter.get('/:cid',(req,resp)=>{
 });
 cartsRouter.post('/:cid/product/:pid',async (req,resp)=>{
     let {cid,pid} = req.params;
+    let {quantity} = req.body;
     let product = await productManager.getProductById(pid);
     let cart = await cartManager.getCartById(cid);
     if(cart){
         if(product){
-            console.log(cart)
-            if(cart.existProductById(pid)){
-                cart.incrementQuantity(pid);
+            let ind = cart.products.findIndex(productBD => productBD.id == pid);
+            if(ind !== -1){
+                cart.products[ind].quantity += quantity;
             }else{
-                cart.addProduct({"id":pid,"quantity":1});
+                cart.products.push({"id":pid,"quantity":1});
             }
-            cartManager.updateCart(cid,cart);
+            cartManager.updateCart(cid,cart).then(data => console.log(data));
             resp.status(200).send(`El Producto fue agregado satisfactoriamente`);
             
         }else{
