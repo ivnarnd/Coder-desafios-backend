@@ -29,7 +29,16 @@ app.use('/static',Express.static(path.join(__dirname,'/public')))
 
 const io = new Server(server);
 
-io.on('connection',()=>{console.log('Servidor socket io conectado: ')})
+io.on('connection',(socket)=>{
+    console.log('Servidor socket io conectado: ');
+    socket.on('messageConecction',(info)=>{
+        if(info.role === 'Admin'){
+            socket.emit('messageControl',`${info.user} Bienvenido Usted es Admin`);
+        }else{
+            socket.emit('messageControl',`Usted no es Admin`);
+        }
+    });
+});
 
 app.use('/api/products',prodsRouter);
 app.get('/static',(req,res)=>{res.render('home')});
