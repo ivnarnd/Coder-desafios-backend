@@ -28,7 +28,7 @@ app.use(Express.urlencoded({extended:true}));
 app.use('/static',Express.static(path.join(__dirname,'/public')))
 
 const io = new Server(server);
-
+let messages = [];
 io.on('connection',(socket)=>{
     console.log('Servidor socket io conectado: ');
     socket.on('messageConecction',(info)=>{
@@ -38,10 +38,14 @@ io.on('connection',(socket)=>{
             socket.emit('messageControl',`Usted no es Admin`);
         }
     });
+    socket.on('message',(infoMessage)=>{
+        messages.push(infoMessage);
+        socket.emit('messages',messages);
+    })
 });
 
 app.use('/api/products',prodsRouter);
-app.get('/static',(req,res)=>{res.render('home')});
+app.get('/static',(req,res)=>{res.render('chat')});
 app.use('/api/carts',cardsRouter);
 app.post('/upload',upload.single('product'),(req,resp)=>{
     console.log(req.file);
