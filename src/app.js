@@ -6,6 +6,7 @@ import {__dirname} from "./path.js";
 import { Server } from "socket.io";
 import path from "path";
 import { engine } from "express-handlebars";
+import { ProductManager } from "./ProductManager.js";
 
 const PORT = 8080;
 let app = Express();
@@ -43,9 +44,11 @@ io.on('connection',(socket)=>{
         socket.emit('messages',messages);
     })
 });
-
+const productManager = new ProductManager('./src/products.json');
 app.use('/api/products',prodsRouter);
-app.get('/static',(req,res)=>{res.render('chat')});
+app.get('/static',(req,res)=>{
+    productManager.getProducts().then(data => res.render('home',{arrProducts: data}))
+});
 app.use('/api/carts',cardsRouter);
 app.post('/upload',upload.single('product'),(req,resp)=>{
     console.log(req.file);
