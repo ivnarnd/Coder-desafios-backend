@@ -47,7 +47,11 @@ io.on('connection',(socket)=>{
 const productManager = new ProductManager('./src/products.json');
 app.use('/api/products',prodsRouter);
 app.get('/static',(req,res)=>{
-    productManager.getProducts().then(data => res.render('home',{arrProducts: data}))
+    productManager.getProducts().then(data => res.render('realTimeProducts',
+    {
+        arrProducts: data,
+        js:"realTimeProducts.js"
+    }))
 });
 app.use('/api/carts',cardsRouter);
 app.post('/upload',upload.single('product'),(req,resp)=>{
