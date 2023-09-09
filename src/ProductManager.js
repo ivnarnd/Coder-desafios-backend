@@ -5,18 +5,17 @@ export class ProductManager{
     }
     async addProduct(product){
         const products = JSON.parse(await fs.readFile(this.path,'utf-8'));
-        console.log (product);
         if(!products.some((productBD)=> productBD.code == product.code)){
             if(!Object.values(product).some((prop)=>prop == undefined)){
                 products.push(product);
                 await fs.writeFile(this.path,JSON.stringify(products));
-                return(`El producto ${product.title} fue agregado exitosamente`);
+                return(true);
             }
             else{
-                return('Producto con propiedad faltante');
+                return(false);
             }
         }else{
-            return('Producto con codigo repetido')
+            return(false)
         }
     }
 

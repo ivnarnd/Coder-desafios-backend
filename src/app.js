@@ -3,10 +3,11 @@ import multer from "multer";
 import prodsRouter from "../src/routes/products.routes.js";
 import cardsRouter from "./routes/carts.routes.js";
 import {__dirname} from "./path.js";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import path from "path";
 import { engine } from "express-handlebars";
 import { ProductManager } from "./ProductManager.js";
+import { Product } from "./Product.js";
 
 const PORT = 8080;
 let app = Express();
@@ -32,27 +33,29 @@ const io = new Server(server);
 let messages = [];
 io.on('connection',(socket)=>{
     console.log('Servidor socket io conectado: ');
-    socket.on('messageConecction',(info)=>{
-        if(info.role === 'Admin'){
-            socket.emit('messageControl',`${info.user} Bienvenido Usted es Admin`);
-        }else{
-            socket.emit('messageControl',`Usted no es Admin`);
-        }
+    socket.on('AddProduct',(product) =>{
+        let productOb = new Product(product);
+        productManager.addProduct(productOb).then(data => console.log(`producto agregado: ${data}`));
     });
-    socket.on('message',(infoMessage)=>{
-        messages.push(infoMessage);
-        socket.emit('messages',messages);
-    })
+    socket.on('Products',()=> productManager.getProducts().then(data =>  socket.emit('ProdsResp',data))
+    );
 });
 const productManager = new ProductManager('./src/products.json');
 app.use('/api/products',prodsRouter);
 app.get('/static',(req,res)=>{
-    productManager.getProducts().then(data => res.render('realTimeProducts',
+    productManager.getProducts().then(data => res.render('home',
     {
         arrProducts: data,
-        js:"realTimeProducts.js"
+        js:"./js/script.js"
     }))
 });
+app.get('/static/realtimeproducts',(req,res)=>{
+    res.render('realTimeProducts',
+    {
+        js:"./js/realTimeProducts.js"
+    })
+});
+
 app.use('/api/carts',cardsRouter);
 app.post('/upload',upload.single('product'),(req,resp)=>{
     console.log(req.file);

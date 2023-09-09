@@ -1,15 +1,15 @@
 import fs from 'fs';
 export class Product{
-    constructor(title,description,price,thumbnail,code,stock,category,status){
+    constructor({title,description,price,code,stock,category}){
         this.title = title;
         this.description = description;
         this.price = price;
-        this.thumbnail = thumbnail;
+        this.thumbnail = [];
         this.code = code;
         this.stock = stock;
         this.id = this.getId();
         this.category=category;
-        this.status=status;
+        this.status=true;
     }
     getId() {
         const path = "./src/products.json";
