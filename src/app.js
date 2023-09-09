@@ -11,6 +11,7 @@ import { Product } from "./Product.js";
 
 const PORT = 8080;
 let app = Express();
+const productManager = new ProductManager('./src/products.json');
 const storage = multer.diskStorage({
     destination:(req,file,cb)=>{
         cb(null,'src/public/img');
@@ -20,6 +21,7 @@ const storage = multer.diskStorage({
     }
 });
 const server = app.listen(PORT,()=> console.log(`Servidor corriendo en localhost:${PORT}`));
+
 app.engine('handlebars',engine());
 app.set('view engine','handlebars');
 app.set('views',path.resolve(__dirname,'./views'));
@@ -30,7 +32,7 @@ app.use(Express.urlencoded({extended:true}));
 app.use('/static',Express.static(path.join(__dirname,'/public')))
 
 const io = new Server(server);
-let messages = [];
+
 io.on('connection',(socket)=>{
     console.log('Servidor socket io conectado: ');
     socket.on('AddProduct',(product) =>{
@@ -40,7 +42,7 @@ io.on('connection',(socket)=>{
     socket.on('Products',()=> productManager.getProducts().then(data =>  socket.emit('ProdsResp',data))
     );
 });
-const productManager = new ProductManager('./src/products.json');
+
 app.use('/api/products',prodsRouter);
 app.get('/static',(req,res)=>{
     productManager.getProducts().then(data => res.render('home',
@@ -55,7 +57,6 @@ app.get('/static/realtimeproducts',(req,res)=>{
         js:"./js/realTimeProducts.js"
     })
 });
-
 app.use('/api/carts',cardsRouter);
 app.post('/upload',upload.single('product'),(req,resp)=>{
     console.log(req.file);

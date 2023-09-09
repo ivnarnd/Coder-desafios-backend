@@ -17,7 +17,6 @@ btnViewProds.addEventListener('click',()=>{
         data.forEach(dat =>{
             let prod = document.createElement("li");
             prod.innerHTML = `${dat.title}`;
-            console.log(prod);
             containerProds.appendChild(prod);
         })
     });
